@@ -12,6 +12,7 @@ import { TelegramActionHandler } from './decorators/TelegramActionHandler'
 import { TokenInjectionToken } from './TokenInjectionToken'
 import { TelegramModuleOptionsFactory } from './TelegramModuleOptionsFactory'
 import { InvalidConfigurationException } from './InvalidConfigurationException'
+import { InputFile } from 'telegraf/typings/telegram-types'
 
 @Injectable()
 export class TelegramBot {
@@ -42,7 +43,7 @@ export class TelegramBot {
     }
   }
 
-  public getMiddleware(path: string) {
+  public getMiddleware(path: string, cert?: InputFile) {
     if (!this.sitePublicUrl) {
       throw new InvalidConfigurationException(
         'sitePublicUrl',
@@ -53,7 +54,7 @@ export class TelegramBot {
     const url = `${this.sitePublicUrl}/${path}`
 
     this.bot.telegram
-      .setWebhook(url)
+      .setWebhook(url, cert)
       .then(() => console.log(`Webhook set success @ ${url}`))
 
     return this.bot.webhookCallback(`/${path}`)

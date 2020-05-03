@@ -1,38 +1,32 @@
 {
   "name": "nest-telegram",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:igorkamyshev/nest-telegram.git",
   "author": "Igor Kamyshev <igor@kamyshev.me>",
   "license": "MIT",
   "devDependencies": {
-    "@solid-soda/scripts": "^1.2.4",
-    "@team-griffin/install-self-peers": "^1.1.1",
-    "@types/lodash": "^4.14.121"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn soda lint-staged",
-      "commit-msg": "yarn soda commitlint"
-    }
-  },
-  "publishConfig": {
-    "access": "public"
+    "@nestjs/common": "7.0.9",
+    "@nestjs/core": "7.0.9",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "6.5.5",
+    "@types/lodash": "4.14.150",
+    "@types/node": "^13.9.1",
+    "typescript": "3.8.3"
   },
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "prepare": "install-self-peers -- --ignore-scripts && yarn build",
-    "ci": "yarn soda lint",
-    "s": "yarn soda"
+    "build": "rimraf dist && tsc -p tsconfig.json"
   },
   "peerDependencies": {
-    "@nestjs/common": "^5.7.3",
-    "@nestjs/core": "^5.7.3",
-    "reflect-metadata": "^0.1.13"
+    "@nestjs/common": "7.0.9",
+    "@nestjs/core": "7.0.9",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "6.5.5"
   },
   "dependencies": {
-    "lodash": "^4.17.13",
-    "telegraf": "^3.27.1"
+    "lodash": "4.17.15",
+    "telegraf": "3.37.0",
+    "rimraf": "3.0.2"
   }
 }
