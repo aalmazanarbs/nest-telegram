@@ -1,0 +1,1 @@
+{"version":3,"file":"TelegramCatch.js","sourceRoot":"","sources":["../../lib/decorators/TelegramCatch.ts"],"names":[],"mappings":";;AASa,QAAA,aAAa,GAAqB,KAAK,CAAC,EAAE,CAAC,MAAM,CAAC,EAAE;IAC/D,IAAI,CAAC,qBAAa,CAAC,QAAQ,EAAE;QAC3B,qBAAa,CAAC,QAAQ,GAAG,IAAI,GAAG,EAAE,CAAA;KACnC;IAED,qBAAa,CAAC,QAAQ,CAAC,GAAG,CAAC,KAAK,EAAE,MAAa,CAAC,CAAA;IAEhD,OAAO,MAAM,CAAA;AACf,CAAC,CAAA"}
