@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addHandlerToStore = exports.TelegramActionHandler = void 0;
 exports.TelegramActionHandler = (parameters) => (target, propertyKey) => {
     exports.addHandlerToStore(target, propertyKey, parameters);
 };

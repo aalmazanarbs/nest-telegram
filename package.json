@@ -7,21 +7,21 @@
   "author": "Igor Kamyshev <igor@kamyshev.me>",
   "license": "MIT",
   "devDependencies": {
-    "@nestjs/common": "7.0.9",
-    "@nestjs/core": "7.0.9",
+    "@nestjs/common": "7.0.13",
+    "@nestjs/core": "7.0.13",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.5",
-    "@types/lodash": "4.14.150",
-    "@types/node": "^13.9.1",
-    "typescript": "3.8.3",
+    "@types/lodash": "4.14.151",
+    "@types/node": "14.0.1",
+    "typescript": "3.9.2",
     "rimraf": "3.0.2"
   },
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json"
   },
   "peerDependencies": {
-    "@nestjs/common": "7.0.9",
-    "@nestjs/core": "7.0.9",
+    "@nestjs/common": "7.0.13",
+    "@nestjs/core": "7.0.13",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.5"
   },

@@ -21,36 +21,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TelegramClient = void 0;
 const common_1 = require("@nestjs/common");
 const Telegram = require('telegraf/telegram');
 const TokenInjectionToken_1 = require("./TokenInjectionToken");
-let TelegramClient = class TelegramClient {
-    constructor(factory) {
-        const { token } = factory.createOptions();
-        this.telegram = new Telegram(token);
-    }
-    sendMessage(chatId, text) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.telegram.sendMessage(chatId, text);
-        });
-    }
-    sendMarkdown(chatId, markdown) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.telegram.sendMessage(chatId, markdown, {
-                parse_mode: 'Markdown',
+let TelegramClient = (() => {
+    let TelegramClient = class TelegramClient {
+        constructor(factory) {
+            const { token } = factory.createOptions();
+            this.telegram = new Telegram(token);
+        }
+        sendMessage(chatId, text) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield this.telegram.sendMessage(chatId, text);
             });
-        });
-    }
-    getChat(chatId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.telegram.getChat(chatId);
-        });
-    }
-};
-TelegramClient = __decorate([
-    common_1.Injectable(),
-    __param(0, common_1.Inject(TokenInjectionToken_1.TokenInjectionToken)),
-    __metadata("design:paramtypes", [Object])
-], TelegramClient);
+        }
+        sendMarkdown(chatId, markdown) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield this.telegram.sendMessage(chatId, markdown, {
+                    parse_mode: 'Markdown',
+                });
+            });
+        }
+        getChat(chatId) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return this.telegram.getChat(chatId);
+            });
+        }
+    };
+    TelegramClient = __decorate([
+        common_1.Injectable(),
+        __param(0, common_1.Inject(TokenInjectionToken_1.TokenInjectionToken)),
+        __metadata("design:paramtypes", [Object])
+    ], TelegramClient);
+    return TelegramClient;
+})();
 exports.TelegramClient = TelegramClient;
 //# sourceMappingURL=TelegramClient.js.map

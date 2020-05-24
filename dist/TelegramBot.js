@@ -21,6 +21,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TelegramBot = void 0;
 const common_1 = require("@nestjs/common");
 const telegraf_1 = require("telegraf");
 const lodash_1 = require("lodash");
@@ -28,99 +29,102 @@ const TelegramCatch_1 = require("./decorators/TelegramCatch");
 const TelegramActionHandler_1 = require("./decorators/TelegramActionHandler");
 const TokenInjectionToken_1 = require("./TokenInjectionToken");
 const InvalidConfigurationException_1 = require("./InvalidConfigurationException");
-let TelegramBot = class TelegramBot {
-    constructor(factory) {
-        const { token, sitePublicUrl } = factory.createOptions();
-        this.sitePublicUrl = sitePublicUrl;
-        this.bot = new telegraf_1.default(token);
-    }
-    init(ref, devMode = false) {
-        this.ref = ref;
-        const handlers = this.createHandlers();
-        this.setupOnStart(handlers);
-        this.setupOnMessage(handlers);
-        this.setupOnCommand(handlers);
-        if (devMode) {
-            this.startPolling();
+let TelegramBot = (() => {
+    let TelegramBot = class TelegramBot {
+        constructor(factory) {
+            const { token, sitePublicUrl } = factory.createOptions();
+            this.sitePublicUrl = sitePublicUrl;
+            this.bot = new telegraf_1.default(token);
         }
-    }
-    getMiddleware(path, cert) {
-        if (!this.sitePublicUrl) {
-            throw new InvalidConfigurationException_1.InvalidConfigurationException('sitePublicUrl', 'does not exist, but webook used');
-        }
-        const url = `${this.sitePublicUrl}/${path}`;
-        this.bot.telegram
-            .setWebhook(url, cert)
-            .then(() => console.log(`Webhook set success @ ${url}`));
-        return this.bot.webhookCallback(`/${path}`);
-    }
-    startPolling() {
-        this.bot.telegram.deleteWebhook().then(() => this.bot.startPolling(), () => {
-        });
-    }
-    createHandlers() {
-        return lodash_1.flatten(Array.from((TelegramActionHandler_1.TelegramActionHandler.handlers || new Map()).entries()).map(([handlerClass, classConfig]) => {
-            const handlerInstance = this.ref.get(handlerClass, { strict: false });
-            return Array.from(classConfig.entries()).map(([methodName, methodCondig]) => ({
-                handle: handlerInstance[methodName].bind(handlerInstance),
-                config: methodCondig,
-            }));
-        }));
-    }
-    setupOnStart(handlers) {
-        const onStart = handlers.filter(({ config }) => config.onStart);
-        if (onStart.length !== 1) {
-            throw new Error();
-        }
-        this.bot.start(this.adoptHandle(lodash_1.head(onStart)));
-    }
-    setupOnMessage(handlers) {
-        const onMessageHandlers = handlers.filter(({ config }) => config.message);
-        onMessageHandlers.forEach(handler => {
-            this.bot.hears(handler.config.message, this.adoptHandle(handler));
-        });
-    }
-    setupOnCommand(handlers) {
-        const commandHandlers = handlers.filter(({ config }) => config.command);
-        commandHandlers.forEach(handler => {
-            this.bot.command(handler.config.command, this.adoptHandle(handler));
-        });
-    }
-    adoptHandle({ handle, config }) {
-        const errorHandler = this.createCatch();
-        return (ctx) => __awaiter(this, void 0, void 0, function* () {
-            const args = yield Promise.all((config.transformations || [])
-                .sort((a, b) => a.index - b.index)
-                .map(({ transform }) => this.ref
-                .get(transform, { strict: false })
-                .transform(ctx)));
-            return handle(ctx, ...args).catch(errorHandler(ctx));
-        });
-    }
-    createCatch() {
-        const handlers = Array.from((TelegramCatch_1.TelegramCatch.handlers || new Map()).entries()).map(([errorType, handlerType]) => {
-            const handler = this.ref.get(handlerType, {
-                strict: false,
-            });
-            return {
-                errorType,
-                handler,
-            };
-        });
-        return (ctx) => (e) => {
-            for (const { errorType, handler } of handlers) {
-                if (e instanceof errorType) {
-                    return handler.catch(ctx, e);
-                }
+        init(ref, devMode = false) {
+            this.ref = ref;
+            const handlers = this.createHandlers();
+            this.setupOnStart(handlers);
+            this.setupOnMessage(handlers);
+            this.setupOnCommand(handlers);
+            if (devMode) {
+                this.startPolling();
             }
-            throw e;
-        };
-    }
-};
-TelegramBot = __decorate([
-    common_1.Injectable(),
-    __param(0, common_1.Inject(TokenInjectionToken_1.TokenInjectionToken)),
-    __metadata("design:paramtypes", [Object])
-], TelegramBot);
+        }
+        getMiddleware(path, cert) {
+            if (!this.sitePublicUrl) {
+                throw new InvalidConfigurationException_1.InvalidConfigurationException('sitePublicUrl', 'does not exist, but webook used');
+            }
+            const url = `${this.sitePublicUrl}/${path}`;
+            this.bot.telegram
+                .setWebhook(url, cert)
+                .then(() => console.log(`Webhook set success @ ${url}`));
+            return this.bot.webhookCallback(`/${path}`);
+        }
+        startPolling() {
+            this.bot.telegram.deleteWebhook().then(() => this.bot.startPolling(), () => {
+            });
+        }
+        createHandlers() {
+            return lodash_1.flatten(Array.from((TelegramActionHandler_1.TelegramActionHandler.handlers || new Map()).entries()).map(([handlerClass, classConfig]) => {
+                const handlerInstance = this.ref.get(handlerClass, { strict: false });
+                return Array.from(classConfig.entries()).map(([methodName, methodCondig]) => ({
+                    handle: handlerInstance[methodName].bind(handlerInstance),
+                    config: methodCondig,
+                }));
+            }));
+        }
+        setupOnStart(handlers) {
+            const onStart = handlers.filter(({ config }) => config.onStart);
+            if (onStart.length !== 1) {
+                throw new Error();
+            }
+            this.bot.start(this.adoptHandle(lodash_1.head(onStart)));
+        }
+        setupOnMessage(handlers) {
+            const onMessageHandlers = handlers.filter(({ config }) => config.message);
+            onMessageHandlers.forEach(handler => {
+                this.bot.hears(handler.config.message, this.adoptHandle(handler));
+            });
+        }
+        setupOnCommand(handlers) {
+            const commandHandlers = handlers.filter(({ config }) => config.command);
+            commandHandlers.forEach(handler => {
+                this.bot.command(handler.config.command, this.adoptHandle(handler));
+            });
+        }
+        adoptHandle({ handle, config }) {
+            const errorHandler = this.createCatch();
+            return (ctx) => __awaiter(this, void 0, void 0, function* () {
+                const args = yield Promise.all((config.transformations || [])
+                    .sort((a, b) => a.index - b.index)
+                    .map(({ transform }) => this.ref
+                    .get(transform, { strict: false })
+                    .transform(ctx)));
+                return handle(ctx, ...args).catch(errorHandler(ctx));
+            });
+        }
+        createCatch() {
+            const handlers = Array.from((TelegramCatch_1.TelegramCatch.handlers || new Map()).entries()).map(([errorType, handlerType]) => {
+                const handler = this.ref.get(handlerType, {
+                    strict: false,
+                });
+                return {
+                    errorType,
+                    handler,
+                };
+            });
+            return (ctx) => (e) => {
+                for (const { errorType, handler } of handlers) {
+                    if (e instanceof errorType) {
+                        return handler.catch(ctx, e);
+                    }
+                }
+                throw e;
+            };
+        }
+    };
+    TelegramBot = __decorate([
+        common_1.Injectable(),
+        __param(0, common_1.Inject(TokenInjectionToken_1.TokenInjectionToken)),
+        __metadata("design:paramtypes", [Object])
+    ], TelegramBot);
+    return TelegramBot;
+})();
 exports.TelegramBot = TelegramBot;
 //# sourceMappingURL=TelegramBot.js.map
